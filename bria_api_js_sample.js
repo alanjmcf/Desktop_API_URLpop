@@ -121,13 +121,25 @@ function callActivity(callList) {
          if (participant.state == ApiCallStates.properties[ApiCallStates.RINGING].text) {
             if (checkIfRingingCallExist(call.id) == false) {
                inboundCallsNotPopped.push(call.id);
+
+               var num = participant.number.split('@')[0];
+               var url = 'http://luma.syncromsp.com/api/v1/callerid?did=' + num + '&token=9ZWTyz80lnIgNQ64';
+               appendToLog('calling URL: >>' + url + '<<');
+               //window.open(url);
+               http = new XMLHttpRequest();
+               http.open("GET", url);
+               http.onreadystatechange = (e) => {
+                 //TODO check ready status!
+                 appendToLog('Syncro rsp: ' + http.responseText)
+               }
+               http.send();
             } 
          }
          
          if (participant.state == ApiCallStates.properties[ApiCallStates.CONNECTED].text) {
             if (checkIfRingingCallExist(call.id) == true) {
-               var url = 'http://www.google.com/search?as_q=' + participant.number;
-               window.open(url);
+               //var url = 'http://www.google.com/search?as_q=' + participant.number;
+               //window.open(url);
                
                removeRingingCall(call.id);
             }
